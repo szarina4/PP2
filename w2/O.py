@@ -63,9 +63,7 @@ def tostr(num):
 s=s.replace("+"," ")
 a=s.split()
 
-"""print(a)
-print(tonum(a[0]))
-print(tonum(a[1]))"""
+
 
 
 sum=tonum(a[0])+tonum(a[1])
