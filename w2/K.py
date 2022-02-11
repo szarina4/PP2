@@ -1,6 +1,4 @@
 def fucn(line):
-  #  if(ord(line)>=48 and ord(line)<=57):
-       # return True
     if(ord(line)>=65 and ord(line)<=90):
         return True
     if(ord(line)>=97 and ord(line)<=122):
