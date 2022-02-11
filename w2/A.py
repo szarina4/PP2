@@ -5,7 +5,7 @@ b[0]=1
 def steps(ind,step):
     for i in range (0,step+1,1):
         if ind+i>=0 and i+ind<len(a) and b[ind]!=0:
-            b[ind+i]=1#tut chto to ne tak
+            b[ind+i]=1
 
 for ind,val in enumerate(a):
     steps(ind,val)
