@@ -23,7 +23,7 @@ SCREEN_HEIGHT = 600
 SPEED = 5
 SCORE = 0
 cnt_coins=0
- 
+z=0 
 #Setting up Fonts
 font = pygame.font.SysFont("Verdana", 60)
 font_small = pygame.font.SysFont("Verdana", 20)
@@ -36,29 +36,46 @@ DISPLAYSURF = pygame.display.set_mode((400,600))
 DISPLAYSURF.fill(WHITE)
 pygame.display.set_caption("Game")
 
+
+coin_sound=pygame.mixer.Sound("coin.mp3")
 #Getting the coin image
-coin_image=pygame.image.load("coins.png").convert_alpha()
-coin_image=pygame.transform.scale(coin_image,(50,40)) 
+goldcoin_image=pygame.image.load("gold_coin.png").convert_alpha()
+goldcoin_image=pygame.transform.scale(goldcoin_image,(50,40)) 
+silvercoin_image=pygame.image.load("silver_coin.png").convert_alpha()
+silvercoin_image=pygame.transform.scale(silvercoin_image,(50,40)) 
+bronzecoin_image=pygame.image.load("bronze_coin.png").convert_alpha()
+bronzecoin_image=pygame.transform.scale(bronzecoin_image,(50,40)) 
 #The coin class
 class Coins(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__() 
-        self.image=coin_image
+        self.randomize()
         self.rect = self.image.get_rect()
         self.rect.center = (random.randint(0,400), random.randint(470,570))
- 
+    #Random coins with different weights 
+    def randomize(self):
+        global z
+        z=random.randint(1,3)
+        if z==1:
+            self.image=goldcoin_image
+        if z==2:
+            self.image=silvercoin_image
+        if z==3:
+            self.image=bronzecoin_image
+        
+
 class Enemy(pygame.sprite.Sprite):
       def __init__(self):
         super().__init__() 
         self.image = pygame.image.load("Enemy.png")
         self.rect = self.image.get_rect()
         self.rect.center = (random.randint(40, SCREEN_WIDTH-40), 0)  
- 
+      #moving the enemy car
       def move(self):
         global SCORE
         self.rect.move_ip(0,SPEED)
         if (self.rect.top > 600):
-            SCORE += 1
+            SCORE+=1
             self.rect.top = 0
             self.rect.center = (random.randint(40, SCREEN_WIDTH - 40), 0)
  
@@ -103,8 +120,9 @@ INC_SPEED = pygame.USEREVENT + 1
 pygame.time.set_timer(INC_SPEED, 1000)
 
 R_COIN=pygame.USEREVENT+1
-pygame.time.set_timer(R_COIN, 2000)
+pygame.time.set_timer(R_COIN, 3000)
  
+increment=True
 #Game Loop
 while True:
        
@@ -117,16 +135,14 @@ while True:
             sys.exit()
         if event.type==R_COIN:
             C1=Coins()
-            thecoins.add(C1)
-            
-    #Showing the money
+            thecoins.add(C1)        
+    #Showing the money count
     DISPLAYSURF.blit(background, (0,0))
     scores = font_small.render("Cars you didnt hit:"+str(SCORE), True, BLACK)
     DISPLAYSURF.blit(scores, (10,10))
-    counterofcoins=font_small.render("Num of coins:"+str(cnt_coins),True,BLUE)
+    counterofcoins=font_small.render("Score of coins:"+str(cnt_coins),True,BLUE)
     DISPLAYSURF.blit(counterofcoins, (10,30))
 
- 
     #Moves and Re-draws all Sprites
     for entity in all_sprites:
         DISPLAYSURF.blit(entity.image, entity.rect)
@@ -137,11 +153,23 @@ while True:
         DISPLAYSURF.blit(coin.image, coin.rect)
 
     if pygame.sprite.spritecollideany(P1, thecoins):
-          cnt_coins+=1         
+          coin_sound.play()
+          #checking which type of coin it is 
+          if z==1:
+                cnt_coins+= 5
+          if z==2:
+                cnt_coins+= 2
+          if z==3:
+                cnt_coins+= 1       
           pygame.display.update()
           for coin in thecoins:
             coin.kill()       
-          
+    
+    #Increasing speed after N coins N=20:
+    if cnt_coins>=20 and increment:
+        SPEED+=2
+        increment=False
+
     #To be run if collision occurs between Player and Enemy
     if pygame.sprite.spritecollideany(P1, enemies):
           pygame.mixer.Sound('crash.wav').play()

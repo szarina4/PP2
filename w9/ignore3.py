@@ -1,3 +1,5 @@
+
+from pickle import FALSE
 import pygame,random
 pygame.init()
 
@@ -188,8 +190,6 @@ game=MAIN()
 snake_timer=pygame.USEREVENT
 react_time=170
 pygame.time.set_timer(snake_timer, react_time)
-food_timer=pygame.USEREVENT+1
-pygame.time.set_timer(food_timer,10000)
 
 
 
@@ -212,23 +212,16 @@ while running:
             if event.key == pygame.K_DOWN:
                 if game.snake.dy!=-1:
                     game.snake.dx,game.snake.dy = 0,1
-
-        if event.type==food_timer:
-            game.food.randomize()
-            game.updater_food()
-            game.food.draw()
-
-
         
         if len(game.snake.body)-3>=5 and level_2:
             game.wall.level=2
             react_time=150
-            level_2=False
+            level_2=FALSE
 
         if len(game.snake.body)-3==10 and level_3:
             game.wall.level=3
             react_time=100
-            level_3=False
+            level_3=FALSE
 
 
         if event.type==snake_timer:
@@ -240,3 +233,6 @@ while running:
     pygame.display.update()
     clock.tick(FPS)
 
+
+#he time
+#the spawn?
