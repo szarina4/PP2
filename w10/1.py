@@ -48,7 +48,7 @@ try:
         for record in insert_value:
             cur.execute(insert_script,record)
 
-    update_script="UPDATE phonebook SET phone_num = '74745666660' WHERE first_name = 'Heddi'"
+    update_script="UPDATE phonebook SET phone_num = '111-111-1111' WHERE first_name = 'Heddi'"
     cur.execute(update_script)
 
     update_script2="UPDATE phonebook SET first_name ='Aidos' WHERE phone_num ='910-295-7194'"
